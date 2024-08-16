@@ -190,6 +190,22 @@ const BalanceChart = ({ transactions }) => {
   // Prepare the data for the line chart
   const labels = transactions.map(transaction => transaction.TransactionDate);
   const dataPoints = transactions.map(transaction => parseFloat(transaction.Balance));
+  
+  // Prepare a mapping of transaction details
+  const transactionDetails = transactions.reduce((acc, transaction) => {
+    const date = transaction.TransactionDate;
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(`${transaction.Counterparty}: ${transaction.Amount} PLN`);
+    return acc;
+  }, {});
+
+  // Generate legend labels based on transaction details
+  const legendLabels = labels.map(date => {
+    const details = transactionDetails[date] || [];
+    return `Date: ${date} - ${details.join(', ')}`;
+  });
 
   const data = {
     labels,
@@ -221,10 +237,22 @@ const BalanceChart = ({ transactions }) => {
         },
       },
     },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const index = context.dataIndex;
+            const amount = parseFloat(transactions[index].Amount);
+            const counterparty = transactions[index].Counterparty;
+            return `Balance: ${context.formattedValue} PLN | Amount: ${amount} PLN | Counterparty: ${counterparty}`;
+          }
+        }
+      }
+    }
   };
 
   return (
-    <div style={{width: '100%'}} className="add-margin">
+    <div style={{ width: '100%' }} className="add-margin">
       <h3>Balance Over Time (PLN)</h3>
       <Line data={data} options={options} />
     </div>
