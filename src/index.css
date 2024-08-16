@@ -5,9 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 12px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.label-input {
+  width: 300px;
+  color: white;
+  height: 50px;
+  margin: auto;
+  background: none;
+  border: none;
+  border-bottom: 1px solid white;
+  margin-bottom: 50px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.add-margin {
+  margin-top: 100px;
 }
