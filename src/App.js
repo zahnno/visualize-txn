@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import {
@@ -14,6 +14,8 @@ import {
   LineElement,
   ArcElement
 } from 'chart.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // Register the components with Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, ArcElement, LineElement, Title, Tooltip, Legend);
@@ -231,11 +233,42 @@ const BalanceChart = ({ transactions }) => {
 
 
 const TransactionList = ({ transactions }) => {
+  const [counterParty, setCounterParty] = useState(null);
+  const [transactionType, setTransactionType] = useState(null);
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
+  const uniqueCounterparties = Array.from(new Set(transactions.map(transaction => transaction.Counterparty)));
+
+  const handleCounterpartyChange = (event) => {
+    setCounterParty(event.target.value);
+    if (counterParty) {
+      const filtered = transactions.filter(transaction => transaction.Counterparty === counterParty);
+      setFilteredTransactions(filtered);
+    } else {
+      setFilteredTransactions(transactions);
+    }
+  };
+
   return (
-    <div style={{fontSize: '12px', width: '50%'}} className="add-margin">
+    <div style={{fontSize: '12px', width: '50%', marginBottom: '150px'}} className="add-margin">
       <h3>Transaction List</h3>
+      <div>
+        <label htmlFor="counterparty-select">Select Counterparty:</label>
+        <select
+          id="counterparty-select"
+          style={{height: '30px', margin:'5px'}}
+          value={counterParty}
+          onChange={handleCounterpartyChange}
+        >
+          <option value="">--Select a counterparty--</option>
+          {uniqueCounterparties.map(counterparty => (
+            <option key={counterparty} value={counterparty}>
+              {counterparty}
+            </option>
+          ))}
+        </select>
+      </div>
       <ul style={{listStyle: 'none'}}>
-        {transactions.map((transaction, index) => (
+        {filteredTransactions.map((transaction, index) => (
           <li key={index} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
             <strong>TXN Date:</strong> {transaction.TransactionDate} <br />
             <strong>Counterparty:</strong> {transaction.Counterparty} <br />
@@ -266,6 +299,10 @@ function parseTransactionData(transactions) {
 
 const TransactionUploader = () => {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
 
@@ -274,10 +311,21 @@ const TransactionUploader = () => {
       complete: (results) => {
         const parsedData = (parseTransactionData(results.data)).slice(1)
         setTransactions(parsedData);
+        setFilteredTransactions(parsedData);
       },
       skipEmptyLines: true,
     });
   };
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const filteredTransactions = transactions.filter(transaction => {
+        const txnDate = new Date(transaction.TransactionDate);
+        return txnDate >= startDate && txnDate <= endDate;
+      });
+      setFilteredTransactions(filteredTransactions);
+    }
+  }, [startDate, endDate, transactions]);
 
   return (
     <div>
@@ -285,10 +333,39 @@ const TransactionUploader = () => {
       <input type="file" accept=".csv" onChange={handleFileUpload} />
       {transactions.length > 0 && (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <BalanceChart transactions={transactions} />
-          <AggregatePieChart transactions={transactions} />
-          <BarChart transactions={transactions} />
-          <TransactionList transactions={transactions} />
+        <div style={{width: '100%'}} className="add-margin">
+          <h3>Filter Transactions By Date</h3>
+          <div style={{display:'flex', flexDirection:'row', justifyContent: 'center'}}>
+            <div style={{display:'flex', flexDirection:'column'}}>
+              <label>Start Date:</label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => {
+                  if (date instanceof Date && !isNaN(date)) {
+                    setStartDate(date);
+                  }
+                }}
+                placeholderText="Start Date"
+              />          
+            </div>
+            <div style={{display:'flex', flexDirection:'column', marginLeft: '5px'}}>
+              <label>End Date:</label>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => {
+                  if (date instanceof Date && !isNaN(date)) {
+                    setEndDate(date);
+                  }
+                }}
+                placeholderText="End Date"
+              />
+            </div>
+          </div>
+        </div>
+          <BalanceChart transactions={filteredTransactions} />
+          <AggregatePieChart transactions={filteredTransactions} />
+          <BarChart transactions={filteredTransactions} />
+          <TransactionList transactions={filteredTransactions} />
         </div>
       )}
     </div>
