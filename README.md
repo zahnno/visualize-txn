@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# Transaction Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Transaction Visualizer is a React-based web application that helps users visualize financial transactions by providing multiple graph types (line, pie, and bar charts). It allows CSV file uploads, parses the transactions, and offers insights into withdrawals, deposits, and account balances over time. The app also includes filtering options to view specific transactions based on dates and counterparties.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **CSV Upload:** Easily upload transaction data from CSV files for visualization.
+- **Data Visualization:**
+  - **Line Chart:** Tracks account balance over time.
+  - **Pie Chart:** Aggregates transaction amounts by counterparty.
+  - **Bar Chart:** Displays withdrawals and deposits by counterparty.
+- **Transaction List:** A detailed list of transactions, with filters for counterparties and date range.
+- **Filtering Options:** Filter transactions based on custom date ranges and minimum withdrawal/deposit amounts.
+  
+## Technologies Used
 
-### `npm start`
+- **React:** Frontend framework for building the user interface.
+- **Chart.js:** Used for rendering interactive charts (line, pie, bar).
+- **PapaParse:** CSV parser to handle file uploads and data parsing.
+- **React DatePicker:** For date range filtering of transactions.
+- **CSS:** For basic styling.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clone the repository:
 
-### `npm test`
+   ```bash
+   git clone https://github.com/your-username/transaction-visualizer.git
+   cd transaction-visualizer
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install the required dependencies:
 
-### `npm run build`
+   ```bash
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Start the application:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm start
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+4. Open your browser and navigate to `http://localhost:3000`.
 
-### `npm run eject`
+## Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Upload CSV:**
+   Upload a CSV file containing transaction data. The file should include at least the following columns:
+   - `TransactionDate`: Date of the transaction.
+   - `Counterparty`: The entity involved in the transaction.
+   - `Amount`: The transaction amount.
+   - `Balance`: Account balance after the transaction.
+   - `Currency`: The currency in which the transaction was conducted.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Filter Transactions:**
+   - You can filter transactions by date range using the date picker.
+   - Adjust the minimum withdrawal and deposit amounts for the bar chart using the input fields.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **View Charts:**
+   - **Line Chart:** Shows account balance over time.
+   - **Pie Chart:** Displays the accumulated transaction amounts by counterparty.
+   - **Bar Chart:** Visualizes withdrawals and deposits by counterparty with adjustable minimum amounts.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. **Transaction List:**
+   View a filtered list of transactions, with details like the transaction date, counterparty, amount, balance, and account number.
 
-## Learn More
+## CSV Format Example
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```csv
+TransactionDate,Counterparty,Title,AccountNumber,Amount,Currency,Balance
+2024-01-01,Account A,Payment,123456,-500,PLN,4500
+2024-01-02,Account B,Deposit,654321,2000,PLN,6500
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Roadmap
 
-### Code Splitting
+- Add more chart types and transaction filters.
+- Implement currency conversion for multi-currency transactions.
+- Introduce user authentication for personalized data management.
+- Enhance performance with large datasets.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributing
 
-### Analyzing the Bundle Size
+Feel free to contribute by opening issues or submitting pull requests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This README reflects the use of libraries like `PapaParse` for CSV parsing, `Chart.js` for visualizations, and React components for managing state and UI elements. Let me know if you need any further customization!
